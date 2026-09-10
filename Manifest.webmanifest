@@ -1,0 +1,18 @@
+{
+  "name": "TEEM 2027 - Plano de Estudos",
+  "short_name": "TEEM 2027",
+  "description": "Checklist diário de preparação para o TEEM 2027",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7fb",
+  "theme_color": "#6d5bd0",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
