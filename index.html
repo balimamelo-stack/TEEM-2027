@@ -8,7 +8,22 @@
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>TEEM 2027</title>
 
-<style>
+<style>.bonusTask{
+  margin-left:28px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#f7f3ff;
+  border-top:none;
+  color:#5b48a8;
+}
+
+.bonusTask span{
+  font-size:13px;
+}
+
+.bonusTask input{
+  accent-color:#8b72df;
+}
 :root{
  --bg:#f7f7fb;--card:#fff;--text:#242230;--muted:#706d7c;
  --accent:#6d5bd0;--accent2:#eeeaff;--green:#33885b;
@@ -691,7 +706,50 @@ function renderToday(){
    });
 
    label.append(cb,span);
-   area.appendChild(label);
+   area.appendChild(label);const bonusId="bonus-"+id;
+
+const bonusLabel=document.createElement("label");
+bonusLabel.className="todayTask";
+bonusLabel.style.background="#f7f3ff";
+bonusLabel.style.padding="10px";
+bonusLabel.style.borderRadius="10px";
+bonusLabel.style.marginTop="8px";
+
+if(state.bonus[bonusId]){
+  bonusLabel.classList.add("done");
+}
+
+const bonusCb=document.createElement("input");
+bonusCb.type="checkbox";
+bonusCb.checked=!!state.bonus[bonusId];
+
+const bonusSpan=document.createElement("span");
+bonusSpan.textContent=bonusText(v.date);
+
+bonusCb.addEventListener("change",()=>{
+  state.bonus[bonusId]=bonusCb.checked;
+
+  if(bonusCb.checked){
+    state.activity[today]=true;
+  }
+
+  const original=document.querySelector(
+    `.bonusTask[data-bonus="${bonusId}"] input`
+  );
+
+  if(original){
+    original.checked=bonusCb.checked;
+    original.closest(".bonusTask")
+      .classList.toggle("done",bonusCb.checked);
+  }
+
+  save();
+  renderToday();
+  updateAll();
+});
+
+bonusLabel.append(bonusCb,bonusSpan);
+area.appendChild(bonusLabel);
  });
 }
 
