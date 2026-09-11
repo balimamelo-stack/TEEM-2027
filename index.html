@@ -512,10 +512,10 @@ const weeks=[
 
 const state=JSON.parse(localStorage.getItem("teem2027")||"{}");
 state.tasks ||= {};
+state.bonus ||= {};
 state.stats ||= {};
 state.activity ||= {};
 state.light ||= {};
-
 const container=document.getElementById("weeks");
 let taskNumber=0;
 const taskMap={};
@@ -534,7 +534,13 @@ function localISO(){
 
 const today=localISO();
 
-function formatToday(){
+function formatToday()function bonusText(date){
+  if(date <= "2026-11-01"){
+    return "⭐ Sessão extra opcional — 20–30 min: 5–10 questões extras + revisar 3 erros ou flashcards difíceis";
+  }
+
+  return "⭐ Sessão extra opcional — 30–45 min: 15–20 questões extras OU 1 caso aberto + correção ativa";
+} 
  const d=new Date();
  return d.toLocaleDateString("pt-BR",{
   weekday:"long",day:"2-digit",month:"long"
@@ -600,7 +606,39 @@ weeks.forEach((week,wi)=>{
 
    label.append(cb,span);
    box.appendChild(label);
- });
+ });const bonusId="bonus-"+id;
+
+const bonusLabel=document.createElement("label");
+bonusLabel.className="task bonusTask";
+bonusLabel.dataset.bonus=bonusId;
+
+const bonusCb=document.createElement("input");
+bonusCb.type="checkbox";
+bonusCb.checked=!!state.bonus[bonusId];
+
+const bonusSpan=document.createElement("span");
+bonusSpan.textContent=bonusText(date);
+
+if(bonusCb.checked){
+  bonusLabel.classList.add("done");
+}
+
+bonusCb.addEventListener("change",()=>{
+  state.bonus[bonusId]=bonusCb.checked;
+
+  bonusLabel.classList.toggle("done",bonusCb.checked);
+
+  if(bonusCb.checked){
+    state.activity[today]=true;
+  }
+
+  save();
+  updateAll();
+  renderToday();
+});
+
+bonusLabel.append(bonusCb,bonusSpan);
+box.appendChild(bonusLabel);
 
  details.appendChild(box);
  container.appendChild(details);
