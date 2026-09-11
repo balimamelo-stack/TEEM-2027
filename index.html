@@ -1,928 +1,2255 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <meta name="theme-color" content="#6d5bd0">
+
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
+
 <title>TEEM 2027</title>
 
-<style>.bonusTask{
-  margin-left:28px;
-  padding:8px 10px;
-  border-radius:10px;
-  background:#f7f3ff;
-  border-top:none;
-  color:#5b48a8;
+<style>
+
+:root{
+  --bg:#f7f7fb;
+  --card:#ffffff;
+  --text:#242230;
+  --muted:#706d7c;
+  --accent:#6d5bd0;
+  --accent2:#eeeaff;
+  --green:#35875d;
+  --green-soft:#eaf7ef;
+  --gold:#9b6a13;
+  --gold-soft:#fff7e5;
+  --border:#e4e2eb;
+  --red:#b43c3c;
 }
 
-.bonusTask span{
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+.app{
+  width:min(780px,100%);
+  margin:auto;
+  padding:14px;
+}
+
+h1{
+  margin:4px 0;
+}
+
+h2{
+  margin:0 0 8px;
+  font-size:1.1rem;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:13px;
+}
+
+.hero{
+  background:linear-gradient(135deg,#f3f0ff,#ffffff);
+  border-color:#dcd5ff;
+}
+
+.progress{
+  height:12px;
+  background:#eceaf2;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:9px;
+}
+
+.progress > div{
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  border-radius:999px;
+  transition:width .25s;
+}
+
+.progress.small{
+  height:8px;
+}
+
+button{
+  min-height:44px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+  border-radius:10px;
+  padding:10px 14px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+button.active,
+button.primary{
+  background:var(--accent);
+  border-color:var(--accent);
+  color:#fff;
+}
+
+button.soft{
+  background:var(--accent2);
+  border-color:#d8d0ff;
+  color:#5140a8;
+}
+
+button.danger{
+  color:var(--red);
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:13px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:13px;
+}
+
+.stat{
+  text-align:center;
+  background:#f7f6fa;
+  border-radius:12px;
+  padding:10px 4px;
+}
+
+.stat strong{
+  display:block;
+  font-size:1.2rem;
+}
+
+.stat span{
+  display:block;
+  margin-top:2px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.todayTask{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:11px 0;
+  border-top:1px solid var(--border);
+}
+
+.todayTask:first-of-type{
+  border-top:0;
+}
+
+.todayTask input,
+.task input{
+  width:21px;
+  height:21px;
+  margin-top:2px;
+  flex:none;
+  accent-color:var(--accent);
+}
+
+.done .taskText,
+.done .todayText{
+  text-decoration:line-through;
+  color:#999;
+}
+
+.todayEmpty{
+  background:#f6f5f9;
+  color:var(--muted);
+  border-radius:11px;
+  padding:12px;
+}
+
+details{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+
+details.currentWeek{
+  border:2px solid #cfc5ff;
+}
+
+summary{
+  cursor:pointer;
+  padding:14px;
+  font-weight:700;
+}
+
+.weekMeta{
+  margin-top:4px;
+  color:var(--muted);
+  font-weight:400;
   font-size:13px;
 }
 
-.bonusTask input{
-  accent-color:#8b72df;
-}
-:root{
- --bg:#f7f7fb;--card:#fff;--text:#242230;--muted:#706d7c;
- --accent:#6d5bd0;--accent2:#eeeaff;--green:#33885b;
- --border:#e4e2eb;--red:#b53a3a;--orange:#c47a24;
-}
-*{box-sizing:border-box}
-body{
- margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
- background:var(--bg);color:var(--text)
-}
-.app{width:min(760px,100%);margin:auto;padding:14px}
-h1{margin:4px 0} h2{font-size:1.1rem;margin-top:0}
-.muted{color:var(--muted)}
-.card{
- background:var(--card);border:1px solid var(--border);
- border-radius:16px;padding:16px;margin-bottom:13px
-}
-.hero{background:linear-gradient(135deg,#f5f2ff,#fff)}
-.progress{height:12px;background:#eceaf2;border-radius:99px;overflow:hidden}
-.progress>div{height:100%;width:0;background:var(--accent);transition:.25s}
-.smallProgress{height:8px}
-button{
- border:1px solid var(--border);background:#fff;color:var(--text);
- border-radius:10px;padding:10px 13px;min-height:43px;font-size:14px
-}
-button.active,.primary{background:var(--accent);color:white;border-color:var(--accent)}
-button.soft{background:var(--accent2);border-color:#dcd4ff;color:#5141a7}
-button.danger{color:var(--red)}
-.buttons{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
-.todayTask{
- display:flex;gap:10px;align-items:flex-start;padding:11px 0;
- border-top:1px solid var(--border)
-}
-.todayTask:first-of-type{border-top:0}
-.todayTask input,.task input{width:21px;height:21px;accent-color:var(--accent);flex:none}
-.done span{text-decoration:line-through;color:#999}
-.todayEmpty{
- padding:12px;border-radius:10px;background:#f6f5f9;color:var(--muted)
-}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px
-}
-.stat{
- text-align:center;padding:10px 5px;border-radius:12px;background:#f7f6fa
-}
-.stat strong{display:block;font-size:1.25rem}
-.stat span{font-size:12px;color:var(--muted)}
-.weekNow{
- border:2px solid #cfc6ff!important;
- box-shadow:0 0 0 2px rgba(109,91,208,.06)
-}
-details{
- background:var(--card);border:1px solid var(--border);
- border-radius:14px;margin-bottom:9px;overflow:hidden
-}
-summary{padding:14px;cursor:pointer;font-weight:700}
-.weekMeta{font-weight:400;color:var(--muted);font-size:13px;margin-top:4px}
 .badge{
- display:inline-block;margin-top:7px;padding:3px 8px;
- background:var(--accent2);color:#5645b2;border-radius:99px;font-size:12px
+  display:inline-block;
+  margin-top:7px;
+  padding:3px 8px;
+  border-radius:999px;
+  background:var(--accent2);
+  color:#5543ae;
+  font-size:12px;
 }
-.tasks{padding:2px 14px 14px}
+
+.tasks{
+  padding:2px 14px 14px;
+}
+
 .task{
- display:flex;align-items:flex-start;gap:10px;padding:10px 3px;
- border-top:1px solid #f0eef4
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px 4px;
+  border-top:1px solid #f0eef4;
 }
-.callout{
- padding:12px;border-radius:12px;background:#fff7e8;
- border:1px solid #f1d6a5;margin-top:12px
+
+.taskText{
+  min-width:0;
 }
-.callout strong{color:#8b5716}
-.hidden{display:none!important}
-input[type=number],textarea{
- width:100%;padding:10px;border:1px solid var(--border);
- border-radius:9px;font-size:16px;background:white
+
+.bonusTask{
+  margin:2px 4px 7px 32px;
+  padding:10px;
+  border-radius:11px;
+  background:var(--gold-soft);
+  color:#75500f;
+  border:1px solid #f0ddb5;
 }
-textarea{min-height:88px}
-label.small{display:block;color:var(--muted);font-size:13px;margin-bottom:5px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.saved{color:var(--green);font-size:13px;min-height:18px;margin-top:7px}
-#todayDate{font-weight:600}
-@media(max-width:520px){
- .stats{grid-template-columns:1fr 1fr 1fr}
- .grid2{grid-template-columns:1fr}
- .app{padding:11px}
+
+.bonusTask input{
+  accent-color:#ba8426;
 }
+
+.bonusTask .taskText{
+  font-size:13px;
+}
+
+.todayBonus{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  background:var(--gold-soft);
+  color:#75500f;
+  border:1px solid #f0ddb5;
+  border-radius:11px;
+  padding:11px;
+  margin-top:9px;
+}
+
+.todayBonus input{
+  width:21px;
+  height:21px;
+  margin-top:2px;
+  flex:none;
+  accent-color:#ba8426;
+}
+
+.lightBox{
+  background:var(--green-soft);
+  border:1px solid #bfe2ca;
+  border-radius:12px;
+  padding:12px;
+  margin-top:12px;
+}
+
+.lightBox strong{
+  color:#256943;
+}
+
+.hidden{
+  display:none !important;
+}
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+label.small{
+  display:block;
+  margin-bottom:5px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+input[type="number"],
+textarea{
+  width:100%;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:#fff;
+  color:var(--text);
+  font-size:16px;
+}
+
+textarea{
+  min-height:88px;
+}
+
+.saved{
+  min-height:18px;
+  color:var(--green);
+  font-size:13px;
+  margin-top:7px;
+}
+
+.sectionTitle{
+  margin:18px 2px 9px;
+  font-weight:700;
+}
+
+@media(max-width:560px){
+
+  .app{
+    padding:10px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .grid2{
+    grid-template-columns:1fr;
+  }
+
+  .bonusTask{
+    margin-left:15px;
+  }
+
+}
+
 </style>
+
 </head>
 
 <body>
+
 <div class="app">
 
 <h1>TEEM 2027</h1>
-<p class="muted">Plano diário de estudos • Setembro/2026 a Fevereiro/2027</p>
+
+<p class="muted">
+Plano diário de estudos • Setembro/2026 a Fevereiro/2027
+</p>
+
+
+<!-- HOJE -->
 
 <section class="card hero">
-  <div class="muted" style="font-size:13px">HOJE</div>
-  <h2 id="todayDate"></h2>
-  <div id="todayContent"></div>
 
-  <div id="lightBox" class="callout hidden">
-    <strong>Modo dia difícil</strong>
-    <p style="margin:6px 0 10px">
-      Meta mínima de hoje: 10 min de flashcards + 5 questões.
-      Cumpriu isso? O dia contou. Não precisa compensar amanhã.
-    </p>
-    <label style="display:flex;gap:9px;align-items:center">
-      <input id="lightDone" type="checkbox" style="width:21px;height:21px">
-      <span>Meta mínima realizada ✓</span>
-    </label>
-  </div>
+<div class="muted" style="font-size:12px;font-weight:700">
+HOJE
+</div>
 
-  <div class="buttons" style="margin-top:13px;margin-bottom:0">
-    <button id="lightMode" class="soft">🌿 Modo dia difícil</button>
-    <button id="goCurrentWeek">Ver semana atual</button>
-  </div>
+<h2 id="todayDate"></h2>
+
+<div id="todayContent"></div>
+
+
+<div id="lightBox" class="lightBox hidden">
+
+<strong>🌿 Modo dia difícil</strong>
+
+<p style="margin:7px 0 11px">
+Hoje a meta mínima pode ser apenas:
+<strong>10 minutos de flashcards + 5 questões.</strong>
+Fez isso? O dia contou. Não precisa compensar amanhã.
+</p>
+
+<label style="display:flex;gap:9px;align-items:center">
+
+<input
+id="lightDone"
+type="checkbox"
+style="width:21px;height:21px">
+
+<span>
+Meta mínima realizada ✓
+</span>
+
+</label>
+
+</div>
+
+
+<div class="buttons" style="margin-top:13px;margin-bottom:0">
+
+<button id="lightMode" class="soft">
+🌿 Modo dia difícil
+</button>
+
+<button id="goCurrentWeek">
+Ver semana atual
+</button>
+
+</div>
+
 </section>
+
+
+<!-- PROGRESSO SEMANAL -->
 
 <section class="card">
-  <strong>Progresso desta semana</strong>
-  <div class="progress smallProgress" style="margin-top:9px">
-    <div id="weekProgressBar"></div>
-  </div>
-  <p id="weekProgressText" class="muted" style="margin-bottom:0"></p>
+
+<strong>Progresso desta semana</strong>
+
+<div class="progress small">
+<div id="weekProgressBar"></div>
+</div>
+
+<p
+id="weekProgressText"
+class="muted"
+style="margin-bottom:0">
+</p>
+
 </section>
+
+
+<!-- PROGRESSO GERAL -->
 
 <section class="card">
-  <strong>Progresso geral</strong>
-  <div class="progress" style="margin-top:9px">
-    <div id="progressBar"></div>
-  </div>
-  <p id="progressText" class="muted"></p>
 
-  <div class="stats">
-    <div class="stat">
-      <strong id="streak">0</strong>
-      <span>dias seguidos</span>
-    </div>
-    <div class="stat">
-      <strong id="studiedDays">0</strong>
-      <span>dias estudados</span>
-    </div>
-    <div class="stat">
-      <strong id="doneTotal">0</strong>
-      <span>metas feitas</span>
-    </div>
-  </div>
+<strong>Progresso geral</strong>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+<p id="progressText" class="muted"></p>
+
+
+<div class="stats">
+
+<div class="stat">
+<strong id="streak">0</strong>
+<span>dias seguidos</span>
+</div>
+
+<div class="stat">
+<strong id="studiedDays">0</strong>
+<span>dias estudados</span>
+</div>
+
+<div class="stat">
+<strong id="doneTotal">0</strong>
+<span>metas principais</span>
+</div>
+
+<div class="stat">
+<strong id="bonusTotal">0</strong>
+<span>⭐ bônus feitos</span>
+</div>
+
+</div>
+
 </section>
+
 
 <section class="card">
-  <strong>Regra principal</strong>
-  <p class="muted" style="margin-bottom:0">
-    Uma tarefa perdida não vira dívida. Siga do ponto atual.
-    Nas semanas mais difíceis, manter contato ativo já é progresso.
-  </p>
+
+<strong>Regra principal</strong>
+
+<p class="muted" style="margin-bottom:0">
+
+Uma tarefa perdida não vira dívida.
+Siga do ponto atual.
+
+A sessão ⭐ EXTRA é sempre opcional e
+<strong>não entra no cálculo das metas principais.</strong>
+
+</p>
+
 </section>
+
+
+<!-- FILTROS -->
 
 <div class="buttons">
-  <button data-filter="all" class="filter active">Todas</button>
-  <button data-filter="pending" class="filter">Pendentes</button>
-  <button data-filter="done" class="filter">Concluídas</button>
+
+<button
+data-filter="all"
+class="filter active">
+Todas
+</button>
+
+<button
+data-filter="pending"
+class="filter">
+Pendentes
+</button>
+
+<button
+data-filter="done"
+class="filter">
+Concluídas
+</button>
+
 </div>
+
 
 <div id="weeks"></div>
 
+
+<!-- SIMULADOS -->
+
 <section class="card">
+
 <h2>Acompanhamento dos simulados</h2>
 
 <div class="grid2">
-  <div>
-    <label class="small">Nota do último simulado (%)</label>
-    <input type="number" id="score" min="0" max="100">
-  </div>
-  <div>
-    <label class="small">Questões realizadas na semana</label>
-    <input type="number" id="questionCount" min="0">
-  </div>
+
+<div>
+
+<label class="small">
+Nota do último simulado (%)
+</label>
+
+<input
+type="number"
+id="score"
+min="0"
+max="100">
+
 </div>
+
+
+<div>
+
+<label class="small">
+Questões realizadas na semana
+</label>
+
+<input
+type="number"
+id="questionCount"
+min="0">
+
+</div>
+
+</div>
+
 
 <div style="margin-top:12px">
-<label class="small">Principais assuntos errados</label>
-<textarea id="weakTopics"
- placeholder="Ex.: nódulo tireoidiano, DRC no diabetes..."></textarea>
+
+<label class="small">
+Principais assuntos errados
+</label>
+
+<textarea
+id="weakTopics"
+placeholder="Ex.: nódulo tireoidiano, DRC no diabetes...">
+</textarea>
+
 </div>
+
 
 <div style="margin-top:12px">
-<label class="small">Erros K / R / D</label>
-<textarea id="errors"
- placeholder="K = conhecimento | R = raciocínio | D = distração"></textarea>
+
+<label class="small">
+Erros K / R / D
+</label>
+
+<textarea
+id="errors"
+placeholder="K = conhecimento | R = raciocínio | D = distração">
+</textarea>
+
 </div>
 
-<button id="saveStats" class="primary" style="margin-top:12px">
+
+<button
+id="saveStats"
+class="primary"
+style="margin-top:12px">
+
 Salvar acompanhamento
+
 </button>
-<div id="savedMessage" class="saved"></div>
+
+<div
+id="savedMessage"
+class="saved">
+</div>
+
 </section>
 
-<button id="reset" class="danger">Apagar todos os checks</button>
+
+<button id="reset" class="danger">
+Apagar todos os checks
+</button>
+
+
+<script>
+
+/* ================================
+   CRONOGRAMA
+================================ */
+
+const weeks = [
+
+{
+start:"2026-09-11",
+end:"2026-09-13",
+title:"11–13/09 • Endocrinologia básica + nivelamento",
+load:"Carga proporcional",
+tasks:[
+["2026-09-11","Sex 11/09 — 35 min conteúdo básico + 20 min recuperação sem consulta + 10 min flashcards"],
+["2026-09-12","Sáb 12/09 — 30 min conteúdo + 15 questões básicas e correção"],
+["2026-09-13","Dom 13/09 — Simulado diagnóstico de 100 questões; registrar nota global e por tema"]
+]
+},
+
+{
+start:"2026-09-14",
+end:"2026-09-20",
+title:"14–20/09 • Endocrinologia básica",
+load:"Flexível / até 8 h",
+tasks:[
+["2026-09-14","Seg — Corrigir parte do simulado e separar erros por assunto"],
+["2026-09-15","Ter — Dia previsto do parto: sem meta obrigatória"],
+["2026-09-16","Qua — Opcional: 10–15 min de flashcards"],
+["2026-09-17","Qui — Opcional: revisar 5 erros do simulado"],
+["2026-09-18","Sex — 20–30 min de conceitos básicos + 5 questões"],
+["2026-09-19","Sáb — 10 questões + correção ativa"],
+["2026-09-20","Dom — Revisão semanal + flashcards difíceis"]
+]
+},
+
+{
+start:"2026-09-21",
+end:"2026-09-27",
+title:"21–27/09 • Diabetes mellitus",
+load:"Até 8 h",
+tasks:[
+["2026-09-21","Seg — Diagnóstico e metas + 5 questões"],
+["2026-09-22","Ter — Tratamento DM2 + 5 questões"],
+["2026-09-23","Qua — Insulinoterapia + 10 questões"],
+["2026-09-24","Qui — Complicações micro/macrovasculares + 5 questões"],
+["2026-09-25","Sex — DM1 e tecnologias + 5 questões"],
+["2026-09-26","Sáb — 10 questões de diabetes + correção"],
+["2026-09-27","Dom — 10 questões mistas + revisão semanal"]
+]
+},
+
+{
+start:"2026-09-28",
+end:"2026-10-04",
+title:"28/09–04/10 • Obesidade",
+load:"8 h",
+tasks:[
+["2026-09-28","Seg — Diagnóstico e avaliação + 5 questões"],
+["2026-09-29","Ter — Tratamento não farmacológico + 5 questões"],
+["2026-09-30","Qua — Farmacoterapia + 10 questões"],
+["2026-10-01","Qui — Cirurgia metabólica/bariátrica + 5 questões"],
+["2026-10-02","Sex — Comorbidades e seguimento + 5 questões"],
+["2026-10-03","Sáb — 10 questões de obesidade + correção"],
+["2026-10-04","Dom — 15 questões cumulativas de diabetes"]
+]
+},
+
+{
+start:"2026-10-05",
+end:"2026-10-11",
+title:"05–11/10 • Dislipidemias",
+load:"8 h",
+tasks:[
+["2026-10-05","Seg — Estratificação de risco e metas + 5 questões"],
+["2026-10-06","Ter — Estatinas/ezetimiba + 5 questões"],
+["2026-10-07","Qua — Hipertrigliceridemia + 10 questões"],
+["2026-10-08","Qui — Dislipidemias familiares + 5 questões"],
+["2026-10-09","Sex — Eventos adversos/interações + 5 questões"],
+["2026-10-10","Sáb — 10 questões específicas + correção"],
+["2026-10-11","Dom — 15 questões cumulativas"]
+]
+},
+
+{
+start:"2026-10-12",
+end:"2026-10-18",
+title:"12–18/10 • Tireoide I",
+load:"8 h",
+tasks:[
+["2026-10-12","Seg — Fisiologia + interpretação TSH/T4 + 5 questões"],
+["2026-10-13","Ter — Hipotireoidismo + 5 questões"],
+["2026-10-14","Qua — Hipertireoidismo/Graves + 10 questões"],
+["2026-10-15","Qui — Tireoidites + 5 questões"],
+["2026-10-16","Sex — Tireoide e gestação + 5 questões"],
+["2026-10-17","Sáb — 10 questões de tireoide"],
+["2026-10-18","Dom — 15 questões cumulativas"]
+]
+},
+
+{
+start:"2026-10-19",
+end:"2026-10-25",
+title:"19–25/10 • Tireoide II",
+load:"8 h",
+tasks:[
+["2026-10-19","Seg — Nódulo: US/TIRADS + 5 questões"],
+["2026-10-20","Ter — PAAF/Bethesda + 5 questões"],
+["2026-10-21","Qua — Câncer diferenciado + 10 questões"],
+["2026-10-22","Qui — Seguimento/tiroglobulina/RAI + 5 questões"],
+["2026-10-23","Sex — Medular/anaplásico + 5 questões"],
+["2026-10-24","Sáb — 10 questões + mini-resposta aberta"],
+["2026-10-25","Dom — 25 questões cumulativas"]
+]
+},
+
+{
+start:"2026-10-26",
+end:"2026-11-01",
+title:"26/10–01/11 • Revisão 1",
+load:"8 h",
+tasks:[
+["2026-10-26","Seg — 10 questões diabetes"],
+["2026-10-27","Ter — 10 questões obesidade/dislipidemia"],
+["2026-10-28","Qua — 10 questões tireoide"],
+["2026-10-29","Qui — 10 questões básica + flashcards"],
+["2026-10-30","Sex — 10 questões mistas cronometradas"],
+["2026-10-31","Sáb — 15–20 questões mistas"],
+["2026-11-01","Dom — Revisar somente erros K/R"]
+]
+},
+
+{
+start:"2026-11-02",
+end:"2026-11-08",
+title:"02–08/11 • Neuroendocrinologia I",
+load:"14 h",
+tasks:[
+["2026-11-02","Seg — Hipófise geral + 12 questões"],
+["2026-11-03","Ter — Prolactina/prolactinoma + 12–15 questões"],
+["2026-11-04","Qua — Acromegalia + 12–15 questões"],
+["2026-11-05","Qui — Cushing hipofisário + 12–15 questões"],
+["2026-11-06","Sex — Hipopituitarismo + 12–15 questões"],
+["2026-11-07","Sáb — DI/SIADH + 12–15 questões"],
+["2026-11-08","Dom — 30 questões cumulativas"]
+]
+},
+
+{
+start:"2026-11-09",
+end:"2026-11-15",
+title:"09–15/11 • Neuroendocrinologia II",
+load:"14 h",
+tasks:[
+["2026-11-09","Seg — Incidentaloma hipofisário + 10 questões"],
+["2026-11-10","Ter — Imagem/campo visual/Knosp + 10 questões"],
+["2026-11-11","Qua — Revisão prolactina/acromegalia + 10 questões"],
+["2026-11-12","Qui — Revisão Cushing/hipopituitarismo + 10 questões"],
+["2026-11-13","Sex — 1 caso aberto sem consulta"],
+["2026-11-14","Sáb — 20 questões neuro + correção"],
+["2026-11-15","Dom — 25 questões antigas"]
+]
+},
+
+{
+start:"2026-11-16",
+end:"2026-11-22",
+title:"16–22/11 • Revisão DM + tireoide + neuro",
+load:"14 h",
+tasks:[
+["2026-11-16","Seg — 20 questões diabetes"],
+["2026-11-17","Ter — 20 questões tireoide"],
+["2026-11-18","Qua — 20 questões neuro"],
+["2026-11-19","Qui — 15 diabetes + 15 tireoide"],
+["2026-11-20","Sex — 15 neuro + 10 obesidade/lipídios"],
+["2026-11-21","Sáb — 25 questões mistas cronometradas"],
+["2026-11-22","Dom — Revisar erros recorrentes"]
+]
+},
+
+{
+start:"2026-11-23",
+end:"2026-11-29",
+title:"23–29/11 • Osteometabolismo I",
+load:"14 h",
+tasks:[
+["2026-11-23","Seg — Osteoporose: diagnóstico + 12 questões"],
+["2026-11-24","Ter — FRAX/risco de fratura + 12 questões"],
+["2026-11-25","Qua — Antirreabsortivos + 12 questões"],
+["2026-11-26","Qui — Osteoformadores/sequenciamento + 12 questões"],
+["2026-11-27","Sex — Cálcio/vitamina D + 10 questões"],
+["2026-11-28","Sáb — Hiperparatireoidismo + 12 questões"],
+["2026-11-29","Dom — 30 questões cumulativas"]
+]
+},
+
+{
+start:"2026-11-30",
+end:"2026-12-06",
+title:"30/11–06/12 • Osteometabolismo II",
+load:"14 h",
+tasks:[
+["2026-11-30","Seg — Hipoparatireoidismo + 10 questões"],
+["2026-12-01","Ter — Osteomalácia/fósforo + 10 questões"],
+["2026-12-02","Qua — Paget e doenças raras + 10 questões"],
+["2026-12-03","Qui — Revisão terapêutica + 10 questões"],
+["2026-12-04","Sex — 1 caso aberto"],
+["2026-12-05","Sáb — 20 questões específicas"],
+["2026-12-06","Dom — 25 questões antigas"]
+]
+},
+
+{
+start:"2026-12-07",
+end:"2026-12-13",
+title:"07–13/12 • Endócrino feminina I",
+load:"14 h",
+tasks:[
+["2026-12-07","Seg — SOP: diagnóstico/fenótipos + 12 questões"],
+["2026-12-08","Ter — SOP: investigação/tratamento + 12 questões"],
+["2026-12-09","Qua — Hirsutismo/hiperandrogenismo + 12 questões"],
+["2026-12-10","Qui — Amenorreia + 12 questões"],
+["2026-12-11","Sex — Menopausa + 12 questões"],
+["2026-12-12","Sáb — Infertilidade + 10 questões"],
+["2026-12-13","Dom — 30 questões cumulativas"]
+]
+},
+
+{
+start:"2026-12-14",
+end:"2026-12-20",
+title:"14–20/12 • Endócrino feminina II",
+load:"14 h",
+tasks:[
+["2026-12-14","Seg — Revisão SOP + 10 questões"],
+["2026-12-15","Ter — Amenorreia/hiperandrogenismo + 10 questões"],
+["2026-12-16","Qua — Menopausa + 10 questões"],
+["2026-12-17","Qui — 1 caso aberto feminina"],
+["2026-12-18","Sex — 20 questões femininas"],
+["2026-12-19","Sáb — 25 questões DM/tireoide/osso"],
+["2026-12-20","Dom — 25 neuro/obesidade/lipídios"]
+]
+},
+
+{
+start:"2026-12-21",
+end:"2026-12-27",
+title:"21–27/12 • Andrologia + transgeneridade",
+load:"Flexível",
+tasks:[
+["2026-12-21","Seg — Hipogonadismo masculino + 10 questões"],
+["2026-12-22","Ter — Infertilidade masculina + 10 questões"],
+["2026-12-23","Qua — Disfunção sexual + 10 questões"],
+["2026-12-24","Qui — Flashcards leves opcionais"],
+["2026-12-25","Sex — Descanso"],
+["2026-12-26","Sáb — Cuidados hormonais na população trans + 10 questões"],
+["2026-12-27","Dom — 10 questões mistas"]
+]
+},
+
+{
+start:"2026-12-28",
+end:"2027-01-03",
+title:"28/12–03/01 • Grande revisão 2",
+load:"Flexível",
+tasks:[
+["2026-12-28","Seg — 15 diabetes + 10 tireoide"],
+["2026-12-29","Ter — 15 neuro + 10 osso"],
+["2026-12-30","Qua — 15 feminina + 10 obesidade/lipídios"],
+["2026-12-31","Qui — Flashcards leves ou descanso"],
+["2027-01-01","Sex — Descanso"],
+["2027-01-02","Sáb — 25 questões mistas cronometradas"],
+["2027-01-03","Dom — Revisar erros K/R"]
+]
+},
+
+{
+start:"2027-01-04",
+end:"2027-01-10",
+title:"04–10/01 • Doenças adrenais I",
+load:"14 h",
+tasks:[
+["2027-01-04","Seg — Fisiologia adrenal/incidentaloma + 12 questões"],
+["2027-01-05","Ter — Síndrome de Cushing + 12 questões"],
+["2027-01-06","Qua — Hiperaldosteronismo + 12 questões"],
+["2027-01-07","Qui — Insuficiência adrenal + 12 questões"],
+["2027-01-08","Sex — Feocromocitoma/paraganglioma + 12 questões"],
+["2027-01-09","Sáb — HAC e outros distúrbios + 10 questões"],
+["2027-01-10","Dom — 25 adrenal + 15 antigas"]
+]
+},
+
+{
+start:"2027-01-11",
+end:"2027-01-17",
+title:"11–17/01 • Doenças adrenais II",
+load:"14 h",
+tasks:[
+["2027-01-11","Seg — Cushing: algoritmo diagnóstico + 10 questões"],
+["2027-01-12","Ter — Aldosterona/renina + 10 questões"],
+["2027-01-13","Qua — Incidentaloma: imagem/conduta + 10 questões"],
+["2027-01-14","Qui — Feocromocitoma: diagnóstico/preparo + 10 questões"],
+["2027-01-15","Sex — Caso aberto de Cushing"],
+["2027-01-16","Sáb — Caso aberto hiperaldosteronismo/feocromo"],
+["2027-01-17","Dom — 20 adrenal + 20 cumulativas"]
+]
+},
+
+{
+start:"2027-01-18",
+end:"2027-01-24",
+title:"18–24/01 • Revisão adrenal + hipófise",
+load:"14 h",
+tasks:[
+["2027-01-18","Seg — 20 questões adrenal"],
+["2027-01-19","Ter — 20 questões hipófise"],
+["2027-01-20","Qua — 15 questões Cushing comparativas"],
+["2027-01-21","Qui — 15 prolactina/acromegalia"],
+["2027-01-22","Sex — 15 insuficiência adrenal/hipopituitarismo"],
+["2027-01-23","Sáb — 25 mistas cronometradas"],
+["2027-01-24","Dom — Caderno de erros + flashcards"]
+]
+},
+
+{
+start:"2027-01-25",
+end:"2027-01-31",
+title:"25–31/01 • Pediatria I",
+load:"14 h",
+tasks:[
+["2027-01-25","Seg — Crescimento normal/curvas + 12 questões"],
+["2027-01-26","Ter — Baixa estatura + 12 questões"],
+["2027-01-27","Qua — Deficiência de GH + 12 questões"],
+["2027-01-28","Qui — Puberdade precoce + 12 questões"],
+["2027-01-29","Sex — Atraso puberal + 12 questões"],
+["2027-01-30","Sáb — Idade óssea + 10 questões"],
+["2027-01-31","Dom — 25 pediatria + 15 antigas"]
+]
+},
+
+{
+start:"2027-02-01",
+end:"2027-02-07",
+title:"01–07/02 • Pediatria II",
+load:"14 h",
+tasks:[
+["2027-02-01","Seg — Tireoide pediátrica + 10 questões"],
+["2027-02-02","Ter — Obesidade/DM pediátrico + 10 questões"],
+["2027-02-03","Qua — DDS + 10 questões"],
+["2027-02-04","Qui — Adrenal pediátrica/HAC + 10 questões"],
+["2027-02-05","Sex — Caso aberto pediátrico"],
+["2027-02-06","Sáb — 20 questões mistas"],
+["2027-02-07","Dom — 25 cumulativas"]
+]
+},
+
+{
+start:"2027-02-08",
+end:"2027-02-14",
+title:"08–14/02 • Revisão cardiometabólica",
+load:"14 h",
+tasks:[
+["2027-02-08","Seg — 20 diabetes"],
+["2027-02-09","Ter — 20 obesidade"],
+["2027-02-10","Qua — 20 dislipidemia"],
+["2027-02-11","Qui — 15 diabetes + 10 obesidade"],
+["2027-02-12","Sex — 15 diabetes + 10 lipídios"],
+["2027-02-13","Sáb — 25 questões cronometradas"],
+["2027-02-14","Dom — Rever erros K/R"]
+]
+},
+
+{
+start:"2027-02-15",
+end:"2027-02-21",
+title:"15–21/02 • Tireoide + osso + adrenal",
+load:"14 h",
+tasks:[
+["2027-02-15","Seg — 20 tireoide"],
+["2027-02-16","Ter — 20 osteometabolismo"],
+["2027-02-17","Qua — 20 adrenal"],
+["2027-02-18","Qui — 15 tireoide + 10 osso"],
+["2027-02-19","Sex — 15 adrenal + 10 osso"],
+["2027-02-20","Sáb — 25 mistas cronometradas"],
+["2027-02-21","Dom — Erros + 1 mini-caso aberto"]
+]
+},
+
+{
+start:"2027-02-22",
+end:"2027-02-28",
+title:"22–28/02 • Revisão + Endocrinologia esportiva",
+load:"12–14 h",
+tasks:[
+["2027-02-22","Seg — 20 neuroendocrinologia"],
+["2027-02-23","Ter — 20 feminina/andrologia"],
+["2027-02-24","Qua — 20 pediatria"],
+["2027-02-25","Qui — 20 questões mistas"],
+["2027-02-26","Sex — Revisar caderno de erros"],
+["2027-02-27","Sáb — Endocrinologia esportiva + 10–15 questões"],
+["2027-02-28","Dom — 10–15 questões + revisão geral do ciclo"]
+]
+}
+
+];
+
+
+/* ================================
+   ESTADO
+================================ */
+
+let state;
+
+try{
+  state = JSON.parse(localStorage.getItem("teem2027") || "{}");
+}catch{
+  state = {};
+}
+
+state.tasks = state.tasks || {};
+state.bonus = state.bonus || {};
+state.stats = state.stats || {};
+state.activity = state.activity || {};
+state.light = state.light || {};
+
+
+function save(){
+  localStorage.setItem("teem2027",JSON.stringify(state));
+}
+
+
+/* ================================
+   DATA LOCAL
+================================ */
+
+function localISO(date = new Date()){
+
+  const y = date.getFullYear();
+
+  const m =
+  String(date.getMonth()+1)
+  .padStart(2,"0");
+
+  const d =
+  String(date.getDate())
+  .padStart(2,"0");
+
+  return `${y}-${m}-${d}`;
+
+}
+
+const today = localISO();
+
+
+function formatToday(){
+
+  return new Date()
+  .toLocaleDateString(
+    "pt-BR",
+    {
+      weekday:"long",
+      day:"2-digit",
+      month:"long",
+      year:"numeric"
+    }
+  );
+
+}
+
+document.getElementById("todayDate").textContent =
+formatToday();
+
+
+/* ================================
+   SESSÃO BÔNUS
+================================ */
+
+function bonusText(date){
+
+  if(date <= "2026-11-01"){
+
+    return "⭐ EXTRA opcional — 20–30 min: 5–10 questões extras + revisar 3 erros ou flashcards difíceis";
+
+  }
+
+  return "⭐ EXTRA opcional — 30–45 min: 15–20 questões extras OU 1 caso aberto + correção ativa";
+
+}
+
+
+/* ================================
+   CONSTRUIR CRONOGRAMA
+================================ */
+
+const weeksContainer =
+document.getElementById("weeks");
+
+const taskMap = {};
+
+let taskNumber = 0;
+
+
+weeks.forEach((week,weekIndex)=>{
+
+  const details =
+  document.createElement("details");
+
+  details.dataset.week =
+  String(weekIndex);
+
+
+  if(today >= week.start &&
+     today <= week.end){
+
+    details.open = true;
+
+    details.classList.add(
+      "currentWeek"
+    );
+
+  }
+
+
+  const summary =
+  document.createElement("summary");
+
+  summary.innerHTML = `
+  ${week.title}
+
+  <div class="weekMeta">
+  ${week.load}
+  </div>
+
+  <span
+  class="badge"
+  id="weekBadge-${weekIndex}">
+  0/${week.tasks.length}
+  </span>
+  `;
+
+  details.appendChild(summary);
+
+
+  const taskBox =
+  document.createElement("div");
+
+  taskBox.className = "tasks";
+
+
+  week.tasks.forEach(([date,text])=>{
+
+    taskNumber++;
+
+    const id =
+    "t" + taskNumber;
+
+    const bonusId =
+    "bonus-" + id;
+
+
+    taskMap[id] = {
+      date,
+      text,
+      week:weekIndex,
+      bonusId
+    };
+
+
+    /* tarefa principal */
+
+    const label =
+    document.createElement("label");
+
+    label.className = "task";
+
+    label.dataset.taskId = id;
+
+
+    const checkbox =
+    document.createElement("input");
+
+    checkbox.type = "checkbox";
+
+    checkbox.checked =
+    !!state.tasks[id];
+
+
+    const span =
+    document.createElement("span");
+
+    span.className =
+    "taskText";
+
+    span.textContent = text;
+
+
+    if(checkbox.checked){
+
+      label.classList.add("done");
+
+    }
+
+
+    checkbox.addEventListener(
+      "change",
+      ()=>{
+
+        state.tasks[id] =
+        checkbox.checked;
+
+        label.classList.toggle(
+          "done",
+          checkbox.checked
+        );
+
+        if(checkbox.checked){
+
+          state.activity[today] =
+          true;
+
+        }
+
+        save();
+
+        updateEverything();
+
+        renderToday();
+
+      }
+    );
+
+
+    label.append(
+      checkbox,
+      span
+    );
+
+    taskBox.appendChild(label);
+
+
+    /* sessão extra */
+
+    const bonusLabel =
+    document.createElement("label");
+
+    bonusLabel.className =
+    "task bonusTask";
+
+    bonusLabel.dataset.bonusId =
+    bonusId;
+
+
+    const bonusCheckbox =
+    document.createElement("input");
+
+    bonusCheckbox.type =
+    "checkbox";
+
+    bonusCheckbox.checked =
+    !!state.bonus[bonusId];
+
+
+    const bonusSpan =
+    document.createElement("span");
+
+    bonusSpan.className =
+    "taskText";
+
+    bonusSpan.textContent =
+    bonusText(date);
+
+
+    if(bonusCheckbox.checked){
+
+      bonusLabel.classList.add(
+        "done"
+      );
+
+    }
+
+
+    bonusCheckbox.addEventListener(
+      "change",
+      ()=>{
+
+        state.bonus[bonusId] =
+        bonusCheckbox.checked;
+
+        bonusLabel.classList.toggle(
+          "done",
+          bonusCheckbox.checked
+        );
+
+        if(bonusCheckbox.checked){
+
+          state.activity[today] =
+          true;
+
+        }
+
+        save();
+
+        updateEverything();
+
+        renderToday();
+
+      }
+    );
+
+
+    bonusLabel.append(
+      bonusCheckbox,
+      bonusSpan
+    );
+
+    taskBox.appendChild(
+      bonusLabel
+    );
+
+  });
+
+
+  details.appendChild(
+    taskBox
+  );
+
+  weeksContainer.appendChild(
+    details
+  );
+
+});
+
+
+/* ================================
+   TELA HOJE
+================================ */
+
+function renderToday(){
+
+  const area =
+  document.getElementById(
+    "todayContent"
+  );
+
+  area.innerHTML = "";
+
+
+  const entries =
+  Object.entries(taskMap)
+  .filter(
+    ([,item]) =>
+    item.date === today
+  );
+
+
+  if(entries.length === 0){
+
+    const empty =
+    document.createElement("div");
+
+    empty.className =
+    "todayEmpty";
+
+
+    if(today < "2026-09-11"){
+
+      empty.textContent =
+      "Seu cronograma começa amanhã. Hoje pode ser um dia de preparação.";
+
+    }
+
+    else if(today > "2027-02-28"){
+
+      empty.textContent =
+      "Este primeiro ciclo terminou. Hora de organizar a etapa seguinte até a prova.";
+
+    }
+
+    else{
+
+      empty.textContent =
+      "Hoje não há atividade programada.";
+
+    }
+
+
+    area.appendChild(empty);
+
+    return;
+
+  }
+
+
+  entries.forEach(([id,item])=>{
+
+
+    /* principal */
+
+    const label =
+    document.createElement("label");
+
+    label.className =
+    "todayTask";
+
+
+    if(state.tasks[id]){
+
+      label.classList.add(
+        "done"
+      );
+
+    }
+
+
+    const checkbox =
+    document.createElement("input");
+
+    checkbox.type =
+    "checkbox";
+
+    checkbox.checked =
+    !!state.tasks[id];
+
+
+    const text =
+    document.createElement("span");
+
+    text.className =
+    "todayText";
+
+    text.textContent =
+    item.text;
+
+
+    checkbox.addEventListener(
+      "change",
+      ()=>{
+
+        state.tasks[id] =
+        checkbox.checked;
+
+        if(checkbox.checked){
+
+          state.activity[today] =
+          true;
+
+        }
+
+
+        const original =
+        document.querySelector(
+          `[data-task-id="${id}"] input`
+        );
+
+
+        if(original){
+
+          original.checked =
+          checkbox.checked;
+
+          original
+          .closest(".task")
+          .classList.toggle(
+            "done",
+            checkbox.checked
+          );
+
+        }
+
+
+        save();
+
+        renderToday();
+
+        updateEverything();
+
+      }
+    );
+
+
+    label.append(
+      checkbox,
+      text
+    );
+
+    area.appendChild(label);
+
+
+    /* bônus */
+
+    const bonusLabel =
+    document.createElement("label");
+
+    bonusLabel.className =
+    "todayBonus";
+
+
+    if(state.bonus[item.bonusId]){
+
+      bonusLabel.classList.add(
+        "done"
+      );
+
+    }
+
+
+    const bonusCheckbox =
+    document.createElement("input");
+
+    bonusCheckbox.type =
+    "checkbox";
+
+    bonusCheckbox.checked =
+    !!state.bonus[item.bonusId];
+
+
+    const bonusTextElement =
+    document.createElement("span");
+
+    bonusTextElement.className =
+    "todayText";
+
+    bonusTextElement.textContent =
+    bonusText(item.date);
+
+
+    bonusCheckbox.addEventListener(
+      "change",
+      ()=>{
+
+        state.bonus[item.bonusId] =
+        bonusCheckbox.checked;
+
+
+        if(bonusCheckbox.checked){
+
+          state.activity[today] =
+          true;
+
+        }
+
+
+        const originalBonus =
+        document.querySelector(
+          `[data-bonus-id="${item.bonusId}"] input`
+        );
+
+
+        if(originalBonus){
+
+          originalBonus.checked =
+          bonusCheckbox.checked;
+
+          originalBonus
+          .closest(".bonusTask")
+          .classList.toggle(
+            "done",
+            bonusCheckbox.checked
+          );
+
+        }
+
+
+        save();
+
+        renderToday();
+
+        updateEverything();
+
+      }
+    );
+
+
+    bonusLabel.append(
+      bonusCheckbox,
+      bonusTextElement
+    );
+
+    area.appendChild(
+      bonusLabel
+    );
+
+  });
+
+}
+
+
+/* ================================
+   PROGRESSO
+================================ */
+
+function currentWeekIndex(){
+
+  return weeks.findIndex(
+    week =>
+    today >= week.start &&
+    today <= week.end
+  );
+
+}
+
+
+function updateProgress(){
+
+  const mainCheckboxes =
+  [
+    ...document.querySelectorAll(
+      ".task:not(.bonusTask) input"
+    )
+  ];
+
+
+  const completed =
+  mainCheckboxes
+  .filter(x => x.checked)
+  .length;
+
+
+  const total =
+  mainCheckboxes.length;
+
+
+  const percent =
+  total
+  ? Math.round(
+      completed / total * 100
+    )
+  : 0;
+
+
+  document.getElementById(
+    "progressBar"
+  ).style.width =
+  percent + "%";
+
+
+  document.getElementById(
+    "progressText"
+  ).textContent =
+  `${percent}% concluído • ${completed}/${total} metas`;
+
+
+  document.getElementById(
+    "doneTotal"
+  ).textContent =
+  completed;
+
+
+  /* bônus */
+
+  const bonuses =
+  [
+    ...document.querySelectorAll(
+      ".bonusTask input"
+    )
+  ];
+
+
+  const bonusDone =
+  bonuses
+  .filter(x => x.checked)
+  .length;
+
+
+  document.getElementById(
+    "bonusTotal"
+  ).textContent =
+  bonusDone;
+
+
+  /* semanas */
+
+  weeks.forEach((week,index)=>{
+
+    const details =
+    document.querySelector(
+      `details[data-week="${index}"]`
+    );
+
+
+    if(!details) return;
+
+
+    const checks =
+    [
+      ...details.querySelectorAll(
+        ".task:not(.bonusTask) input"
+      )
+    ];
+
+
+    const done =
+    checks.filter(
+      x => x.checked
+    ).length;
+
+
+    const badge =
+    document.getElementById(
+      `weekBadge-${index}`
+    );
+
+
+    if(badge){
+
+      badge.textContent =
+      `${done}/${checks.length}`;
+
+    }
+
+  });
+
+
+  /* semana atual */
+
+  const current =
+  currentWeekIndex();
+
+
+  if(current >= 0){
+
+    const details =
+    document.querySelector(
+      `details[data-week="${current}"]`
+    );
+
+
+    const checks =
+    [
+      ...details.querySelectorAll(
+        ".task:not(.bonusTask) input"
+      )
+    ];
+
+
+    const done =
+    checks.filter(
+      x => x.checked
+    ).length;
+
+
+    const pct =
+    checks.length
+    ? Math.round(
+        done / checks.length * 100
+      )
+    : 0;
+
+
+    document.getElementById(
+      "weekProgressBar"
+    ).style.width =
+    pct + "%";
+
+
+    document.getElementById(
+      "weekProgressText"
+    ).textContent =
+    `${pct}% • ${done}/${checks.length} metas principais da semana`;
+
+  }
+
+  else{
+
+    document.getElementById(
+      "weekProgressBar"
+    ).style.width =
+    "0%";
+
+
+    document.getElementById(
+      "weekProgressText"
+    ).textContent =
+    "Fora do período programado.";
+
+  }
+
+}
+
+
+/* ================================
+   DIAS ESTUDADOS E SEQUÊNCIA
+================================ */
+
+function updateActivity(){
+
+  const activityDates =
+  Object.keys(state.activity)
+  .filter(
+    date => state.activity[date]
+  )
+  .sort();
+
+
+  document.getElementById(
+    "studiedDays"
+  ).textContent =
+  activityDates.length;
+
+
+  function previousDate(iso){
+
+    const date =
+    new Date(iso + "T12:00:00");
+
+    date.setDate(
+      date.getDate() - 1
+    );
+
+    return localISO(date);
+
+  }
+
+
+  let cursor = today;
+
+
+  if(!state.activity[cursor]){
+
+    cursor =
+    previousDate(cursor);
+
+  }
+
+
+  let streak = 0;
+
+
+  while(state.activity[cursor]){
+
+    streak++;
+
+    cursor =
+    previousDate(cursor);
+
+  }
+
+
+  document.getElementById(
+    "streak"
+  ).textContent =
+  streak;
+
+}
+
+
+/* ================================
+   FILTROS
+================================ */
+
+let currentFilter = "all";
+
+
+function applyFilter(){
+
+  document.querySelectorAll(
+    ".task:not(.bonusTask)"
+  )
+  .forEach(task=>{
+
+    const checked =
+    task
+    .querySelector("input")
+    .checked;
+
+
+    let show = true;
+
+
+    if(currentFilter === "done"){
+
+      show = checked;
+
+    }
+
+
+    if(currentFilter === "pending"){
+
+      show = !checked;
+
+    }
+
+
+    task.style.display =
+    show
+    ? "flex"
+    : "none";
+
+
+    /* bônus acompanha a tarefa */
+
+    const bonus =
+    task.nextElementSibling;
+
+
+    if(
+      bonus &&
+      bonus.classList.contains(
+        "bonusTask"
+      )
+    ){
+
+      bonus.style.display =
+      show
+      ? "flex"
+      : "none";
+
+    }
+
+  });
+
+}
+
+
+document
+.querySelectorAll(".filter")
+.forEach(button=>{
+
+  button.addEventListener(
+    "click",
+    ()=>{
+
+      currentFilter =
+      button.dataset.filter;
+
+
+      document
+      .querySelectorAll(".filter")
+      .forEach(btn=>{
+
+        btn.classList.toggle(
+          "active",
+          btn === button
+        );
+
+      });
+
+
+      applyFilter();
+
+    }
+  );
+
+});
+
+
+/* ================================
+   MODO DIA DIFÍCIL
+================================ */
+
+const lightBox =
+document.getElementById("lightBox");
+
+const lightDone =
+document.getElementById("lightDone");
+
+
+lightDone.checked =
+!!state.light[today];
+
+
+document.getElementById(
+  "lightMode"
+)
+.addEventListener(
+  "click",
+  ()=>{
+
+    lightBox.classList.toggle(
+      "hidden"
+    );
+
+  }
+);
+
+
+lightDone.addEventListener(
+  "change",
+  ()=>{
+
+    state.light[today] =
+    lightDone.checked;
+
+
+    if(lightDone.checked){
+
+      state.activity[today] =
+      true;
+
+    }
+
+
+    save();
+
+    updateActivity();
+
+  }
+);
+
+
+/* ================================
+   VER SEMANA ATUAL
+================================ */
+
+document.getElementById(
+  "goCurrentWeek"
+)
+.addEventListener(
+  "click",
+  ()=>{
+
+    const index =
+    currentWeekIndex();
+
+
+    if(index < 0) return;
+
+
+    const details =
+    document.querySelector(
+      `details[data-week="${index}"]`
+    );
+
+
+    if(details){
+
+      details.open = true;
+
+      details.scrollIntoView({
+        behavior:"smooth",
+        block:"start"
+      });
+
+    }
+
+  }
+);
+
+
+/* ================================
+   SIMULADOS
+================================ */
+
+document.getElementById(
+  "score"
+).value =
+state.stats.score || "";
+
+
+document.getElementById(
+  "questionCount"
+).value =
+state.stats.questionCount || "";
+
+
+document.getElementById(
+  "weakTopics"
+).value =
+state.stats.weakTopics || "";
+
+
+document.getElementById(
+  "errors"
+).value =
+state.stats.errors || "";
+
+
+document.getElementById(
+  "saveStats"
+)
+.addEventListener(
+  "click",
+  ()=>{
+
+    state.stats = {
+
+      score:
+      document.getElementById(
+        "score"
+      ).value,
+
+      questionCount:
+      document.getElementById(
+        "questionCount"
+      ).value,
+
+      weakTopics:
+      document.getElementById(
+        "weakTopics"
+      ).value,
+
+      errors:
+      document.getElementById(
+        "errors"
+      ).value
+
+    };
+
+
+    save();
+
+
+    const message =
+    document.getElementById(
+      "savedMessage"
+    );
+
+
+    message.textContent =
+    "Acompanhamento salvo ✓";
+
+
+    setTimeout(
+      ()=>{
+        message.textContent = "";
+      },
+      1800
+    );
+
+  }
+);
+
+
+/* ================================
+   RESET
+================================ */
+
+document.getElementById(
+  "reset"
+)
+.addEventListener(
+  "click",
+  ()=>{
+
+    const ok =
+    confirm(
+      "Apagar todos os checks, bônus e sequência de estudos?"
+    );
+
+
+    if(!ok) return;
+
+
+    state.tasks = {};
+    state.bonus = {};
+    state.activity = {};
+    state.light = {};
+
+
+    save();
+
+
+    document
+    .querySelectorAll(
+      ".task input"
+    )
+    .forEach(input=>{
+
+      input.checked = false;
+
+      input
+      .closest(".task")
+      .classList.remove(
+        "done"
+      );
+
+    });
+
+
+    lightDone.checked =
+    false;
+
+
+    renderToday();
+
+    updateEverything();
+
+  }
+);
+
+
+/* ================================
+   ATUALIZAÇÃO GERAL
+================================ */
+
+function updateEverything(){
+
+  updateProgress();
+
+  updateActivity();
+
+  applyFilter();
+
+}
+
+
+/* ================================
+   SERVICE WORKER
+================================ */
+
+if(
+  "serviceWorker"
+  in navigator
+){
+
+  window.addEventListener(
+    "load",
+    ()=>{
+
+      navigator
+      .serviceWorker
+      .register("./sw.js")
+      .catch(
+        error =>
+        console.log(
+          "Service Worker:",
+          error
+        )
+      );
+
+    }
+  );
+
+}
+
+
+/* ================================
+   INICIAR
+================================ */
+
+renderToday();
+
+updateEverything();
+
+</script>
 
 </div>
 
-<script>
-const weeks=[
-{
- start:"2026-09-11",end:"2026-09-13",
- title:"11–13/09 • Endocrinologia básica + nivelamento",
- load:"Carga proporcional",
- tasks:[
- ["2026-09-11","Sex 11/09 — 35 min conteúdo básico + 20 min recuperação sem consulta + 10 min flashcards"],
- ["2026-09-12","Sáb 12/09 — 30 min conteúdo + 15 questões básicas e correção"],
- ["2026-09-13","Dom 13/09 — Simulado diagnóstico de 100 questões; registrar nota global e por tema"]
-]},
-{
- start:"2026-09-14",end:"2026-09-20",
- title:"14–20/09 • Endocrinologia básica",load:"Flexível / até 8 h",
- tasks:[
- ["2026-09-14","Seg — Corrigir parte do simulado e separar erros por assunto"],
- ["2026-09-15","Ter — Dia previsto do parto: sem meta obrigatória"],
- ["2026-09-16","Qua — Opcional: 10–15 min de flashcards"],
- ["2026-09-17","Qui — Opcional: revisar 5 erros do simulado"],
- ["2026-09-18","Sex — 20–30 min conceitos básicos + 5 questões"],
- ["2026-09-19","Sáb — 10 questões + correção ativa"],
- ["2026-09-20","Dom — Revisão da semana + flashcards difíceis"]
-]},
-{
- start:"2026-09-21",end:"2026-09-27",
- title:"21–27/09 • Diabetes mellitus",load:"Até 8 h",
- tasks:[
- ["2026-09-21","Seg — Diagnóstico e metas + 5 questões"],
- ["2026-09-22","Ter — Tratamento DM2 + 5 questões"],
- ["2026-09-23","Qua — Insulinoterapia + 10 questões"],
- ["2026-09-24","Qui — Complicações micro/macrovasculares + 5 questões"],
- ["2026-09-25","Sex — DM1 e tecnologias + 5 questões"],
- ["2026-09-26","Sáb — 10 questões de diabetes + correção"],
- ["2026-09-27","Dom — 10 questões mistas + revisão semanal"]
-]},
-{
- start:"2026-09-28",end:"2026-10-04",
- title:"28/09–04/10 • Obesidade",load:"8 h",
- tasks:[
- ["2026-09-28","Seg — Diagnóstico e avaliação + 5 questões"],
- ["2026-09-29","Ter — Tratamento não farmacológico + 5 questões"],
- ["2026-09-30","Qua — Farmacoterapia + 10 questões"],
- ["2026-10-01","Qui — Cirurgia metabólica/bariátrica + 5 questões"],
- ["2026-10-02","Sex — Comorbidades/seguimento + 5 questões"],
- ["2026-10-03","Sáb — 10 questões obesidade"],
- ["2026-10-04","Dom — 15 questões cumulativas de diabetes"]
-]},
-{
- start:"2026-10-05",end:"2026-10-11",
- title:"05–11/10 • Dislipidemias",load:"8 h",
- tasks:[
- ["2026-10-05","Seg — Estratificação de risco e metas + 5 questões"],
- ["2026-10-06","Ter — Estatinas/ezetimiba + 5 questões"],
- ["2026-10-07","Qua — Hipertrigliceridemia + 10 questões"],
- ["2026-10-08","Qui — Dislipidemias familiares + 5 questões"],
- ["2026-10-09","Sex — Eventos adversos/interações + 5 questões"],
- ["2026-10-10","Sáb — 10 questões específicas"],
- ["2026-10-11","Dom — 15 questões cumulativas"]
-]},
-{
- start:"2026-10-12",end:"2026-10-18",
- title:"12–18/10 • Tireoide I",load:"8 h",
- tasks:[
- ["2026-10-12","Seg — Fisiologia + interpretação TSH/T4 + 5 questões"],
- ["2026-10-13","Ter — Hipotireoidismo + 5 questões"],
- ["2026-10-14","Qua — Hipertireoidismo/Graves + 10 questões"],
- ["2026-10-15","Qui — Tireoidites + 5 questões"],
- ["2026-10-16","Sex — Tireoide e gestação + 5 questões"],
- ["2026-10-17","Sáb — 10 questões de tireoide"],
- ["2026-10-18","Dom — 15 questões cumulativas"]
-]},
-{
- start:"2026-10-19",end:"2026-10-25",
- title:"19–25/10 • Tireoide II",load:"8 h",
- tasks:[
- ["2026-10-19","Seg — Nódulo: US/TIRADS + 5 questões"],
- ["2026-10-20","Ter — PAAF/Bethesda + 5 questões"],
- ["2026-10-21","Qua — Câncer diferenciado + 10 questões"],
- ["2026-10-22","Qui — Seguimento/tiroglobulina/RAI + 5 questões"],
- ["2026-10-23","Sex — Medular/anaplásico + 5 questões"],
- ["2026-10-24","Sáb — 10 questões + mini-resposta aberta"],
- ["2026-10-25","Dom — 25 questões cumulativas"]
-]},
-{
- start:"2026-10-26",end:"2026-11-01",
- title:"26/10–01/11 • Revisão 1",load:"8 h",
- tasks:[
- ["2026-10-26","Seg — 10 questões diabetes"],
- ["2026-10-27","Ter — 10 obesidade/dislipidemia"],
- ["2026-10-28","Qua — 10 questões tireoide"],
- ["2026-10-29","Qui — 10 questões básica + flashcards"],
- ["2026-10-30","Sex — 10 questões mistas cronometradas"],
- ["2026-10-31","Sáb — 15–20 questões mistas"],
- ["2026-11-01","Dom — Revisar somente erros K/R"]
-]},
-{
- start:"2026-11-02",end:"2026-11-08",
- title:"02–08/11 • Neuroendocrinologia I",load:"14 h",
- tasks:[
- ["2026-11-02","Seg — Hipófise geral + 12 questões"],
- ["2026-11-03","Ter — Prolactina/prolactinoma + 12–15 questões"],
- ["2026-11-04","Qua — Acromegalia + 12–15 questões"],
- ["2026-11-05","Qui — Cushing hipofisário + 12–15 questões"],
- ["2026-11-06","Sex — Hipopituitarismo + 12–15 questões"],
- ["2026-11-07","Sáb — DI/SIADH + 12–15 questões"],
- ["2026-11-08","Dom — 30 questões cumulativas"]
-]},
-{
- start:"2026-11-09",end:"2026-11-15",
- title:"09–15/11 • Neuroendocrinologia II",load:"14 h",
- tasks:[
- ["2026-11-09","Seg — Incidentaloma hipofisário + 10 questões"],
- ["2026-11-10","Ter — Imagem/campo visual/Knosp + 10 questões"],
- ["2026-11-11","Qua — Prolactina/acromegalia + 10 questões"],
- ["2026-11-12","Qui — Cushing/hipopituitarismo + 10 questões"],
- ["2026-11-13","Sex — 1 caso aberto sem consulta"],
- ["2026-11-14","Sáb — 20 questões neuro + correção"],
- ["2026-11-15","Dom — 25 questões antigas"]
-]},
-{
- start:"2026-11-16",end:"2026-11-22",
- title:"16–22/11 • Revisão DM + tireoide + neuro",load:"14 h",
- tasks:[
- ["2026-11-16","Seg — 20 questões diabetes"],
- ["2026-11-17","Ter — 20 questões tireoide"],
- ["2026-11-18","Qua — 20 questões neuro"],
- ["2026-11-19","Qui — 15 diabetes + 15 tireoide"],
- ["2026-11-20","Sex — 15 neuro + 10 obesidade/lipídios"],
- ["2026-11-21","Sáb — 25 questões mistas cronometradas"],
- ["2026-11-22","Dom — Revisar erros recorrentes"]
-]},
-{
- start:"2026-11-23",end:"2026-11-29",
- title:"23–29/11 • Osteometabolismo I",load:"14 h",
- tasks:[
- ["2026-11-23","Seg — Osteoporose: diagnóstico + 12 questões"],
- ["2026-11-24","Ter — FRAX/risco de fratura + 12 questões"],
- ["2026-11-25","Qua — Antirreabsortivos + 12 questões"],
- ["2026-11-26","Qui — Osteoformadores/sequenciamento + 12 questões"],
- ["2026-11-27","Sex — Cálcio/vitamina D + 10 questões"],
- ["2026-11-28","Sáb — Hiperparatireoidismo + 12 questões"],
- ["2026-11-29","Dom — 30 questões cumulativas"]
-]},
-{
- start:"2026-11-30",end:"2026-12-06",
- title:"30/11–06/12 • Osteometabolismo II",load:"14 h",
- tasks:[
- ["2026-11-30","Seg — Hipoparatireoidismo + 10 questões"],
- ["2026-12-01","Ter — Osteomalácia/fósforo + 10 questões"],
- ["2026-12-02","Qua — Paget e doenças raras + 10 questões"],
- ["2026-12-03","Qui — Revisão terapêutica + 10 questões"],
- ["2026-12-04","Sex — 1 caso aberto"],
- ["2026-12-05","Sáb — 20 questões específicas"],
- ["2026-12-06","Dom — 25 questões antigas"]
-]},
-{
- start:"2026-12-07",end:"2026-12-13",
- title:"07–13/12 • Endócrino feminina I",load:"14 h",
- tasks:[
- ["2026-12-07","Seg — SOP: diagnóstico/fenótipos + 12 questões"],
- ["2026-12-08","Ter — SOP: investigação/tratamento + 12 questões"],
- ["2026-12-09","Qua — Hirsutismo/hiperandrogenismo + 12 questões"],
- ["2026-12-10","Qui — Amenorreia + 12 questões"],
- ["2026-12-11","Sex — Menopausa + 12 questões"],
- ["2026-12-12","Sáb — Infertilidade + 10 questões"],
- ["2026-12-13","Dom — 30 questões cumulativas"]
-]},
-{
- start:"2026-12-14",end:"2026-12-20",
- title:"14–20/12 • Endócrino feminina II",load:"14 h",
- tasks:[
- ["2026-12-14","Seg — Revisão SOP + 10 questões"],
- ["2026-12-15","Ter — Amenorreia/hiperandrogenismo + 10 questões"],
- ["2026-12-16","Qua — Menopausa + 10 questões"],
- ["2026-12-17","Qui — 1 caso aberto feminina"],
- ["2026-12-18","Sex — 20 questões femininas"],
- ["2026-12-19","Sáb — 25 questões DM/tireoide/osso"],
- ["2026-12-20","Dom — 25 neuro/obesidade/lipídios"]
-]},
-{
- start:"2026-12-21",end:"2026-12-27",
- title:"21–27/12 • Andrologia + transgeneridade",load:"Flexível",
- tasks:[
- ["2026-12-21","Seg — Hipogonadismo masculino + 10 questões"],
- ["2026-12-22","Ter — Infertilidade masculina + 10 questões"],
- ["2026-12-23","Qua — Disfunção sexual + 10 questões"],
- ["2026-12-24","Qui — Flashcards leves opcional"],
- ["2026-12-25","Sex — Descanso"],
- ["2026-12-26","Sáb — Cuidados hormonais na população trans + 10 questões"],
- ["2026-12-27","Dom — 10 questões mistas"]
-]},
-{
- start:"2026-12-28",end:"2027-01-03",
- title:"28/12–03/01 • Grande revisão 2",load:"Flexível",
- tasks:[
- ["2026-12-28","Seg — 15 diabetes + 10 tireoide"],
- ["2026-12-29","Ter — 15 neuro + 10 osso"],
- ["2026-12-30","Qua — 15 feminina + 10 obesidade/lipídios"],
- ["2026-12-31","Qui — Flashcards leves ou descanso"],
- ["2027-01-01","Sex — Descanso"],
- ["2027-01-02","Sáb — 25 questões mistas cronometradas"],
- ["2027-01-03","Dom — Revisar erros K/R"]
-]},
-{
- start:"2027-01-04",end:"2027-01-10",
- title:"04–10/01 • Doenças adrenais I",load:"14 h",
- tasks:[
- ["2027-01-04","Seg — Fisiologia adrenal/incidentaloma + 12 questões"],
- ["2027-01-05","Ter — Síndrome de Cushing + 12 questões"],
- ["2027-01-06","Qua — Hiperaldosteronismo + 12 questões"],
- ["2027-01-07","Qui — Insuficiência adrenal + 12 questões"],
- ["2027-01-08","Sex — Feocromocitoma/paraganglioma + 12 questões"],
- ["2027-01-09","Sáb — HAC e outros distúrbios + 10 questões"],
- ["2027-01-10","Dom — 25 adrenal + 15 antigas"]
-]},
-{
- start:"2027-01-11",end:"2027-01-17",
- title:"11–17/01 • Doenças adrenais II",load:"14 h",
- tasks:[
- ["2027-01-11","Seg — Cushing: algoritmo diagnóstico + 10 questões"],
- ["2027-01-12","Ter — Aldosterona/renina + 10 questões"],
- ["2027-01-13","Qua — Incidentaloma: imagem/conduta + 10 questões"],
- ["2027-01-14","Qui — Feocromocitoma: diagnóstico/preparo + 10 questões"],
- ["2027-01-15","Sex — Caso aberto de Cushing"],
- ["2027-01-16","Sáb — Caso aberto hiperaldosteronismo/feocromo"],
- ["2027-01-17","Dom — 20 adrenal + 20 cumulativas"]
-]},
-{
- start:"2027-01-18",end:"2027-01-24",
- title:"18–24/01 • Revisão adrenal + hipófise",load:"14 h",
- tasks:[
- ["2027-01-18","Seg — 20 questões adrenal"],
- ["2027-01-19","Ter — 20 questões hipófise"],
- ["2027-01-20","Qua — 15 questões Cushing comparativas"],
- ["2027-01-21","Qui — 15 prolactina/acromegalia"],
- ["2027-01-22","Sex — 15 insuficiência adrenal/hipopituitarismo"],
- ["2027-01-23","Sáb — 25 mistas cronometradas"],
- ["2027-01-24","Dom — Caderno de erros + flashcards"]
-]},
-{
- start:"2027-01-25",end:"2027-01-31",
- title:"25–31/01 • Pediatria I",load:"14 h",
- tasks:[
- ["2027-01-25","Seg — Crescimento normal/curvas + 12 questões"],
- ["2027-01-26","Ter — Baixa estatura + 12 questões"],
- ["2027-01-27","Qua — Deficiência de GH + 12 questões"],
- ["2027-01-28","Qui — Puberdade precoce + 12 questões"],
- ["2027-01-29","Sex — Atraso puberal + 12 questões"],
- ["2027-01-30","Sáb — Idade óssea + 10 questões"],
- ["2027-01-31","Dom — 25 pediatria + 15 antigas"]
-]},
-{
- start:"2027-02-01",end:"2027-02-07",
- title:"01–07/02 • Pediatria II",load:"14 h",
- tasks:[
- ["2027-02-01","Seg — Tireoide pediátrica + 10 questões"],
- ["2027-02-02","Ter — Obesidade/DM pediátrico + 10 questões"],
- ["2027-02-03","Qua — DDS + 10 questões"],
- ["2027-02-04","Qui — Adrenal pediátrica/HAC + 10 questões"],
- ["2027-02-05","Sex — Caso aberto pediátrico"],
- ["2027-02-06","Sáb — 20 questões mistas"],
- ["2027-02-07","Dom — 25 cumulativas"]
-]},
-{
- start:"2027-02-08",end:"2027-02-14",
- title:"08–14/02 • Revisão cardiometabólica",load:"14 h",
- tasks:[
- ["2027-02-08","Seg — 20 diabetes"],
- ["2027-02-09","Ter — 20 obesidade"],
- ["2027-02-10","Qua — 20 dislipidemia"],
- ["2027-02-11","Qui — 15 diabetes + 10 obesidade"],
- ["2027-02-12","Sex — 15 diabetes + 10 lipídios"],
- ["2027-02-13","Sáb — 25 questões cronometradas"],
- ["2027-02-14","Dom — Rever erros K/R"]
-]},
-{
- start:"2027-02-15",end:"2027-02-21",
- title:"15–21/02 • Tireoide + osso + adrenal",load:"14 h",
- tasks:[
- ["2027-02-15","Seg — 20 tireoide"],
- ["2027-02-16","Ter — 20 osteometabolismo"],
- ["2027-02-17","Qua — 20 adrenal"],
- ["2027-02-18","Qui — 15 tireoide + 10 osso"],
- ["2027-02-19","Sex — 15 adrenal + 10 osso"],
- ["2027-02-20","Sáb — 25 mistas cronometradas"],
- ["2027-02-21","Dom — Erros + 1 mini-caso aberto"]
-]},
-{
- start:"2027-02-22",end:"2027-02-28",
- title:"22–28/02 • Revisão + Endocrinologia esportiva",load:"12–14 h",
- tasks:[
- ["2027-02-22","Seg — 20 neuroendocrinologia"],
- ["2027-02-23","Ter — 20 feminina/andrologia"],
- ["2027-02-24","Qua — 20 pediatria"],
- ["2027-02-25","Qui — 20 questões mistas"],
- ["2027-02-26","Sex — Revisar caderno de erros"],
- ["2027-02-27","Sáb — Endocrinologia esportiva + 10–15 questões"],
- ["2027-02-28","Dom — 10–15 questões + revisão geral do ciclo"]
-]}];
-
-const state=JSON.parse(localStorage.getItem("teem2027")||"{}");
-state.tasks ||= {};
-state.bonus ||= {};
-state.stats ||= {};
-state.activity ||= {};
-state.light ||= {};
-const container=document.getElementById("weeks");
-let taskNumber=0;
-const taskMap={};
-
-function save(){
- localStorage.setItem("teem2027",JSON.stringify(state));
-}
-
-function localISO(){
- const d=new Date();
- const y=d.getFullYear();
- const m=String(d.getMonth()+1).padStart(2,"0");
- const day=String(d.getDate()).padStart(2,"0");
- return `${y}-${m}-${day}`;
-}
-
-const today=localISO();
-
-function formatToday()function bonusText(date){
-  if(date <= "2026-11-01"){
-    return "⭐ Sessão extra opcional — 20–30 min: 5–10 questões extras + revisar 3 erros ou flashcards difíceis";
-  }
-
-  return "⭐ Sessão extra opcional — 30–45 min: 15–20 questões extras OU 1 caso aberto + correção ativa";
-} 
- const d=new Date();
- return d.toLocaleDateString("pt-BR",{
-  weekday:"long",day:"2-digit",month:"long"
- });
-}
-
-document.getElementById("todayDate").textContent=formatToday();
-
-weeks.forEach((week,wi)=>{
- const details=document.createElement("details");
- details.dataset.start=week.start;
- details.dataset.end=week.end;
-
- if(today>=week.start && today<=week.end){
-   details.open=true;
-   details.classList.add("weekNow");
- }
-
- const summary=document.createElement("summary");
- summary.innerHTML=`
- ${week.title}
- <div class="weekMeta">${week.load}</div>
- <span class="badge" id="week-${wi}"></span>`;
- details.appendChild(summary);
-
- const box=document.createElement("div");
- box.className="tasks";
-
- week.tasks.forEach(([date,text])=>{
-   taskNumber++;
-   const id="t"+taskNumber;
-
-   taskMap[id]={date,text,week:wi};
-
-   const label=document.createElement("label");
-   label.className="task";
-   label.dataset.id=id;
-   label.dataset.date=date;
-
-   const cb=document.createElement("input");
-   cb.type="checkbox";
-   cb.checked=!!state.tasks[id];
-
-   const span=document.createElement("span");
-   span.textContent=text;
-
-   if(cb.checked) label.classList.add("done");
-
-   cb.addEventListener("change",()=>{
-     state.tasks[id]=cb.checked;
-
-     if(cb.checked){
-       label.classList.add("done");
-       state.activity[today]=true;
-     } else {
-       label.classList.remove("done");
-     }
-
-     save();
-     updateAll();
-     renderToday();
-   });
-
-   label.append(cb,span);
-   box.appendChild(label);
- });const bonusId="bonus-"+id;
-
-const bonusLabel=document.createElement("label");
-bonusLabel.className="task bonusTask";
-bonusLabel.dataset.bonus=bonusId;
-
-const bonusCb=document.createElement("input");
-bonusCb.type="checkbox";
-bonusCb.checked=!!state.bonus[bonusId];
-
-const bonusSpan=document.createElement("span");
-bonusSpan.textContent=bonusText(date);
-
-if(bonusCb.checked){
-  bonusLabel.classList.add("done");
-}
-
-bonusCb.addEventListener("change",()=>{
-  state.bonus[bonusId]=bonusCb.checked;
-
-  bonusLabel.classList.toggle("done",bonusCb.checked);
-
-  if(bonusCb.checked){
-    state.activity[today]=true;
-  }
-
-  save();
-  updateAll();
-  renderToday();
-});
-
-bonusLabel.append(bonusCb,bonusSpan);
-box.appendChild(bonusLabel);
-
- details.appendChild(box);
- container.appendChild(details);
-});
-
-function renderToday(){
- const area=document.getElementById("todayContent");
- area.innerHTML="";
-
- const entries=Object.entries(taskMap).filter(([,v])=>v.date===today);
-
- if(!entries.length){
-   const div=document.createElement("div");
-   div.className="todayEmpty";
-   div.textContent=
-    today<"2026-09-11"
-    ?"Seu cronograma começa amanhã. Hoje pode ser seu dia de preparação."
-    :today>"2027-02-28"
-    ?"O primeiro ciclo terminou. Hora de reorganizar março–maio."
-    :"Hoje não há atividade programada.";
-   area.appendChild(div);
-   return;
- }
-
- entries.forEach(([id,v])=>{
-   const label=document.createElement("label");
-   label.className="todayTask";
-   if(state.tasks[id]) label.classList.add("done");
-
-   const cb=document.createElement("input");
-   cb.type="checkbox";
-   cb.checked=!!state.tasks[id];
-
-   const span=document.createElement("span");
-   span.textContent=v.text;
-
-   cb.addEventListener("change",()=>{
-     state.tasks[id]=cb.checked;
-     if(cb.checked) state.activity[today]=true;
-     save();
-
-     const original=document.querySelector(`.task[data-id="${id}"] input`);
-     if(original){
-       original.checked=cb.checked;
-       original.closest(".task").classList.toggle("done",cb.checked);
-     }
-
-     renderToday();
-     updateAll();
-   });
-
-   label.append(cb,span);
-   area.appendChild(label);const bonusId="bonus-"+id;
-
-const bonusLabel=document.createElement("label");
-bonusLabel.className="todayTask";
-bonusLabel.style.background="#f7f3ff";
-bonusLabel.style.padding="10px";
-bonusLabel.style.borderRadius="10px";
-bonusLabel.style.marginTop="8px";
-
-if(state.bonus[bonusId]){
-  bonusLabel.classList.add("done");
-}
-
-const bonusCb=document.createElement("input");
-bonusCb.type="checkbox";
-bonusCb.checked=!!state.bonus[bonusId];
-
-const bonusSpan=document.createElement("span");
-bonusSpan.textContent=bonusText(v.date);
-
-bonusCb.addEventListener("change",()=>{
-  state.bonus[bonusId]=bonusCb.checked;
-
-  if(bonusCb.checked){
-    state.activity[today]=true;
-  }
-
-  const original=document.querySelector(
-    `.bonusTask[data-bonus="${bonusId}"] input`
-  );
-
-  if(original){
-    original.checked=bonusCb.checked;
-    original.closest(".bonusTask")
-      .classList.toggle("done",bonusCb.checked);
-  }
-
-  save();
-  renderToday();
-  updateAll();
-});
-
-bonusLabel.append(bonusCb,bonusSpan);
-area.appendChild(bonusLabel);
- });
-}
-
-function currentWeekIndex(){
- return weeks.findIndex(w=>today>=w.start && today<=w.end);
-}
-
-function updateProgress(){
- const checks=[...document.querySelectorAll(".task input")];
- const done=checks.filter(x=>x.checked).length;
- const total=checks.length;
- const pct=total?Math.round(done/total*100):0;
-
- document.getElementById("progressBar").style.width=pct+"%";
- document.getElementById("progressText").textContent=
- `${pct}% concluído • ${done}/${total} metas`;
- document.getElementById("doneTotal").textContent=done;
-
- weeks.forEach((w,i)=>{
-   const details=document.querySelectorAll("details")[i];
-   const cs=[...details.querySelectorAll(".task input")];
-   const n=cs.filter(x=>x.checked).length;
-   document.getElementById(`week-${i}`).textContent=`${n}/${cs.length}`;
- });
-
- const wi=currentWeekIndex();
- if(wi>=0){
-   const det=document.querySelectorAll("details")[wi];
-   const cs=[...det.querySelectorAll(".task input")];
-   const n=cs.filter(x=>x.checked).length;
-   const p=Math.round(n/cs.length*100);
-   document.getElementById("weekProgressBar").style.width=p+"%";
-   document.getElementById("weekProgressText").textContent=
-   `${p}% • ${n}/${cs.length} metas da semana`;
- } else {
-   document.getElementById("weekProgressBar").style.width="0%";
-   document.getElementById("weekProgressText").textContent=
-   "Fora do período do cronograma.";
- }
-}
-
-function updateActivity(){
- const dates=Object.keys(state.activity).filter(d=>state.activity[d]).sort();
- document.getElementById("studiedDays").textContent=dates.length;
-
- let streak=0;
- let cursor=new Date(today+"T12:00:00");
-
- while(true){
-   const y=cursor.getFullYear();
-   const m=String(cursor.getMonth()+1).padStart(2,"0");
-   const d=String(cursor.getDate()).padStart(2,"0");
-   const key=`${y}-${m}-${d}`;
-
-   if(state.activity[key]){
-     streak++;
-     cursor.setDate(cursor.getDate()-1);
-   } else {
-     if(streak===0){
-       cursor.setDate(cursor.getDate()-1);
-       const y2=cursor.getFullYear();
-       const m2=String(cursor.getMonth()+1).padStart(2,"0");
-       const d2=String(cursor.getDate()).padStart(2,"0");
-       const yesterday=`${y2}-${m2}-${d2}`;
-
-       if(state.activity[yesterday]){
-         continue;
-       }
-     }
-     break;
-   }
- }
-
- document.getElementById("streak").textContent=streak;
-}
-
-let filter="all";
-
-function applyFilter(){
- document.querySelectorAll(".task").forEach(task=>{
-   const done=task.querySelector("input").checked;
-   task.style.display=
-   filter==="all"||
-   (filter==="done"&&done)||
-   (filter==="pending"&&!done)
-   ?"flex":"none";
- });
-}
-
-document.querySelectorAll(".filter").forEach(btn=>{
- btn.addEventListener("click",()=>{
-   filter=btn.dataset.filter;
-   document.querySelectorAll(".filter")
-   .forEach(b=>b.classList.toggle("active",b===btn));
-   applyFilter();
- });
-});
-
-const lightBox=document.getElementById("lightBox");
-const lightDone=document.getElementById("lightDone");
-lightDone.checked=!!state.light[today];
-
-document.getElementById("lightMode").addEventListener("click",()=>{
- lightBox.classList.toggle("hidden");
-});
-
-lightDone.addEventListener("change",()=>{
- state.light[today]=lightDone.checked;
- if(lightDone.checked) state.activity[today]=true;
- save();
- updateActivity();
-});
-
-document.getElementById("goCurrentWeek").addEventListener("click",()=>{
- const wi=currentWeekIndex();
- if(wi<0) return;
-
- const d=document.querySelectorAll("details")[wi];
- d.open=true;
- d.scrollIntoView({behavior:"smooth",block:"start"});
-});
-
-document.getElementById("score").value=state.stats.score||"";
-document.getElementById("questionCount").value=state.stats.questionCount||"";
-document.getElementById("weakTopics").value=state.stats.weakTopics||"";
-document.getElementById("errors").value=state.stats.errors||"";
-
-document.getElementById("saveStats").addEventListener("click",()=>{
- state.stats={
-   score:document.getElementById("score").value,
-   questionCount:document.getElementById("questionCount").value,
-   weakTopics:document.getElementById("weakTopics").value,
-   errors:document.getElementById("errors").value
- };
-
- save();
-
- const msg=document.getElementById("savedMessage");
- msg.textContent="Acompanhamento salvo ✓";
- setTimeout(()=>msg.textContent="",1800);
-});
-
-document.getElementById("reset").addEventListener("click",()=>{
- if(!confirm("Apagar todos os checks do cronograma?")) return;
-
- state.tasks={};
- state.activity={};
- state.light={};
- save();
-
- document.querySelectorAll(".task input").forEach(x=>{
-   x.checked=false;
-   x.closest(".task").classList.remove("done");
- });
-
- renderToday();
- updateAll();
-});
-
-function updateAll(){
- updateProgress();
- updateActivity();
- applyFilter();
-}
-
-if("serviceWorker" in navigator){
- window.addEventListener("load",()=>{
-   navigator.serviceWorker.register("./sw.js");
- });
-}
-
-renderToday();
-updateAll();
-</script>
 </body>
 </html>
