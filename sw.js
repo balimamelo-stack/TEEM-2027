@@ -1,4 +1,4 @@
-const CACHE = "teem-2027-v1";
+const CACHE = "teem-2027-v2";
 
 const FILES = [
   "./",
